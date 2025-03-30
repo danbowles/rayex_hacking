@@ -8,6 +8,7 @@ defmodule RayexHacking.Game do
   @width 800
   @height 450
   @title "Rayex Hacking"
+  # Colors
   @color_green_a %RS.Color{r: 0, g: 100, b: 48, a: 126}
   @color_gray %RS.Color{r: 0, g: 0, b: 0, a: 255}
 
@@ -27,13 +28,12 @@ defmodule RayexHacking.Game do
     init_window(@width, @height, @title)
     set_target_fps(@fps)
 
-    tick()
+    tick(%State{})
 
     {:ok, %State{}}
   end
 
-  @impl true
-  def handle_info(:tick, state) do
+  def tick(state) do
     if window_should_close() do
       close_window()
       System.stop(0)
@@ -50,9 +50,7 @@ defmodule RayexHacking.Game do
       draw_fps(10, @height - 24)
 
       end_drawing()
-      tick()
-
-      {:noreply, new_state}
+      tick(new_state)
     end
   end
 
@@ -87,9 +85,5 @@ defmodule RayexHacking.Game do
       true ->
         {speed, new_position}
     end
-  end
-
-  defp tick() do
-    Process.send_after(self(), :tick, trunc(1000 / @fps))
   end
 end
